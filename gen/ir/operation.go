@@ -122,6 +122,18 @@ func (op Parameter) GoDoc() []string {
 	return prettyDoc(s.Description, notice)
 }
 
+// GoStructTag returns a Go struct tag for this parameter (if relevant).
+// Currently only returns omitzero for parameters with optional Type.GenericVariant
+func (op Parameter) GoStructTag() string {
+	if op.Type == nil {
+		return ""
+	}
+	if op.Type.GenericVariant.Optional {
+		return `json:",omitzero"`
+	}
+	return ""
+}
+
 // Default returns default value of this field, if it is set.
 func (op Parameter) Default() Default {
 	var schema *jsonschema.Schema
