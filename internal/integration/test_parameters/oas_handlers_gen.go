@@ -1023,14 +1023,14 @@ func (s *Server) handleOptionalArrayParameterRequest(args [0]string, argsEscaped
 
 // handleOptionalParametersRequest handles optionalParameters operation.
 //
-// GET /optionalQueryParameters
+// GET /optionalParameters
 func (s *Server) handleOptionalParametersRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	statusWriter := &codeRecorder{ResponseWriter: w}
 	w = statusWriter
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("optionalParameters"),
 		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/optionalQueryParameters"),
+		semconv.HTTPRouteKey.String("/optionalParameters"),
 	}
 
 	// Start a span for this request.
@@ -1104,7 +1104,7 @@ func (s *Server) handleOptionalParametersRequest(args [0]string, argsEscaped boo
 		return
 	}
 
-	var response string
+	var response *OptionalQueryParametersResponse
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -1133,6 +1133,10 @@ func (s *Server) handleOptionalParametersRequest(args [0]string, argsEscaped boo
 					Name: "timestamp",
 					In:   "query",
 				}: params.Timestamp,
+				{
+					Name: "array",
+					In:   "query",
+				}: params.Array,
 			},
 			Raw: r,
 		}
@@ -1140,7 +1144,7 @@ func (s *Server) handleOptionalParametersRequest(args [0]string, argsEscaped boo
 		type (
 			Request  = struct{}
 			Params   = OptionalParametersParams
-			Response = string
+			Response = *OptionalQueryParametersResponse
 		)
 		response, err = middleware.HookMiddleware[
 			Request,

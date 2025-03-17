@@ -856,6 +856,7 @@ type OptionalParametersParams struct {
 	Boolean   OptBool
 	Object    OptOptionalParametersObject
 	Timestamp OptDateTime
+	Array     []string
 }
 
 func unpackOptionalParametersParams(packed middleware.Parameters) (params OptionalParametersParams) {
@@ -902,6 +903,15 @@ func unpackOptionalParametersParams(packed middleware.Parameters) (params Option
 		}
 		if v, ok := packed[key]; ok {
 			params.Timestamp = v.(OptDateTime)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "array",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Array = v.([]string)
 		}
 	}
 	return params
@@ -1100,6 +1110,49 @@ func decodeOptionalParametersParams(args [0]string, argsEscaped bool, r *http.Re
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
 			Name: "timestamp",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: array.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "array",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				return d.DecodeArray(func(d uri.Decoder) error {
+					var paramsDotArrayVal string
+					if err := func() error {
+						val, err := d.DecodeValue()
+						if err != nil {
+							return err
+						}
+
+						c, err := conv.ToString(val)
+						if err != nil {
+							return err
+						}
+
+						paramsDotArrayVal = c
+						return nil
+					}(); err != nil {
+						return err
+					}
+					params.Array = append(params.Array, paramsDotArrayVal)
+					return nil
+				})
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "array",
 			In:   "query",
 			Err:  err,
 		}

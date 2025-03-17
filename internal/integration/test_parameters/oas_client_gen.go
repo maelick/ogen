@@ -63,8 +63,8 @@ type Invoker interface {
 	OptionalArrayParameter(ctx context.Context, params OptionalArrayParameterParams) (string, error)
 	// OptionalParameters invokes optionalParameters operation.
 	//
-	// GET /optionalQueryParameters
-	OptionalParameters(ctx context.Context, params OptionalParametersParams) (string, error)
+	// GET /optionalParameters
+	OptionalParameters(ctx context.Context, params OptionalParametersParams) (*OptionalQueryParametersResponse, error)
 	// PathParameter invokes pathParameter operation.
 	//
 	// Test for path param.
@@ -919,17 +919,17 @@ func (c *Client) sendOptionalArrayParameter(ctx context.Context, params Optional
 
 // OptionalParameters invokes optionalParameters operation.
 //
-// GET /optionalQueryParameters
-func (c *Client) OptionalParameters(ctx context.Context, params OptionalParametersParams) (string, error) {
+// GET /optionalParameters
+func (c *Client) OptionalParameters(ctx context.Context, params OptionalParametersParams) (*OptionalQueryParametersResponse, error) {
 	res, err := c.sendOptionalParameters(ctx, params)
 	return res, err
 }
 
-func (c *Client) sendOptionalParameters(ctx context.Context, params OptionalParametersParams) (res string, err error) {
+func (c *Client) sendOptionalParameters(ctx context.Context, params OptionalParametersParams) (res *OptionalQueryParametersResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("optionalParameters"),
 		semconv.HTTPRequestMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/optionalQueryParameters"),
+		semconv.HTTPRouteKey.String("/optionalParameters"),
 	}
 
 	// Run stopwatch.
@@ -962,7 +962,7 @@ func (c *Client) sendOptionalParameters(ctx context.Context, params OptionalPara
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [1]string
-	pathParts[0] = "/optionalQueryParameters"
+	pathParts[0] = "/optionalParameters"
 	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeQueryParams"
@@ -1046,6 +1046,32 @@ func (c *Client) sendOptionalParameters(ctx context.Context, params OptionalPara
 		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
 			if val, ok := params.Timestamp.Get(); ok {
 				return e.EncodeValue(conv.DateTimeToString(val))
+			}
+			return nil
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	{
+		// Encode "array" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "array",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			if params.Array != nil {
+				return e.EncodeArray(func(e uri.Encoder) error {
+					for i, item := range params.Array {
+						if err := func() error {
+							return e.EncodeValue(conv.StringToString(item))
+						}(); err != nil {
+							return errors.Wrapf(err, "[%d]", i)
+						}
+					}
+					return nil
+				})
 			}
 			return nil
 		}); err != nil {

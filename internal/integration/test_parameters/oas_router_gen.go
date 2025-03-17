@@ -264,9 +264,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							return
 						}
 
-					case 'Q': // Prefix: "QueryParameters"
+					case 'P': // Prefix: "Parameters"
 
-						if l := len("QueryParameters"); len(elem) >= l && elem[0:l] == "QueryParameters" {
+						if l := len("Parameters"); len(elem) >= l && elem[0:l] == "Parameters" {
 							elem = elem[l:]
 						} else {
 							break
@@ -707,9 +707,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							}
 						}
 
-					case 'Q': // Prefix: "QueryParameters"
+					case 'P': // Prefix: "Parameters"
 
-						if l := len("QueryParameters"); len(elem) >= l && elem[0:l] == "QueryParameters" {
+						if l := len("Parameters"); len(elem) >= l && elem[0:l] == "Parameters" {
 							elem = elem[l:]
 						} else {
 							break
@@ -722,7 +722,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								r.name = OptionalParametersOperation
 								r.summary = ""
 								r.operationID = "optionalParameters"
-								r.pathPattern = "/optionalQueryParameters"
+								r.pathPattern = "/optionalParameters"
 								r.args = args
 								r.count = 0
 								return r, true

@@ -350,6 +350,52 @@ func (o OptOptionalParametersObject) Or(d OptionalParametersObject) OptionalPara
 	return d
 }
 
+// NewOptOptionalQueryParametersResponseObject returns new OptOptionalQueryParametersResponseObject with value set to v.
+func NewOptOptionalQueryParametersResponseObject(v OptionalQueryParametersResponseObject) OptOptionalQueryParametersResponseObject {
+	return OptOptionalQueryParametersResponseObject{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptOptionalQueryParametersResponseObject is optional OptionalQueryParametersResponseObject.
+type OptOptionalQueryParametersResponseObject struct {
+	Value OptionalQueryParametersResponseObject
+	Set   bool
+}
+
+// IsSet returns true if OptOptionalQueryParametersResponseObject was set.
+func (o OptOptionalQueryParametersResponseObject) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptOptionalQueryParametersResponseObject) Reset() {
+	var v OptionalQueryParametersResponseObject
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptOptionalQueryParametersResponseObject) SetTo(v OptionalQueryParametersResponseObject) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptOptionalQueryParametersResponseObject) Get() (v OptionalQueryParametersResponseObject, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptOptionalQueryParametersResponseObject) Or(d OptionalQueryParametersResponseObject) OptionalQueryParametersResponseObject {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {
 	return OptString{
@@ -407,6 +453,90 @@ func (s *OptionalParametersObject) GetKey() OptString {
 
 // SetKey sets the value of Key.
 func (s *OptionalParametersObject) SetKey(val OptString) {
+	s.Key = val
+}
+
+// Ref: #/components/schemas/OptionalQueryParametersResponse
+type OptionalQueryParametersResponse struct {
+	Integer   OptInt                                   `json:"integer"`
+	String    OptString                                `json:"string"`
+	Boolean   OptBool                                  `json:"boolean"`
+	Object    OptOptionalQueryParametersResponseObject `json:"object"`
+	Timestamp OptDateTime                              `json:"timestamp"`
+	Array     []string                                 `json:"array"`
+}
+
+// GetInteger returns the value of Integer.
+func (s *OptionalQueryParametersResponse) GetInteger() OptInt {
+	return s.Integer
+}
+
+// GetString returns the value of String.
+func (s *OptionalQueryParametersResponse) GetString() OptString {
+	return s.String
+}
+
+// GetBoolean returns the value of Boolean.
+func (s *OptionalQueryParametersResponse) GetBoolean() OptBool {
+	return s.Boolean
+}
+
+// GetObject returns the value of Object.
+func (s *OptionalQueryParametersResponse) GetObject() OptOptionalQueryParametersResponseObject {
+	return s.Object
+}
+
+// GetTimestamp returns the value of Timestamp.
+func (s *OptionalQueryParametersResponse) GetTimestamp() OptDateTime {
+	return s.Timestamp
+}
+
+// GetArray returns the value of Array.
+func (s *OptionalQueryParametersResponse) GetArray() []string {
+	return s.Array
+}
+
+// SetInteger sets the value of Integer.
+func (s *OptionalQueryParametersResponse) SetInteger(val OptInt) {
+	s.Integer = val
+}
+
+// SetString sets the value of String.
+func (s *OptionalQueryParametersResponse) SetString(val OptString) {
+	s.String = val
+}
+
+// SetBoolean sets the value of Boolean.
+func (s *OptionalQueryParametersResponse) SetBoolean(val OptBool) {
+	s.Boolean = val
+}
+
+// SetObject sets the value of Object.
+func (s *OptionalQueryParametersResponse) SetObject(val OptOptionalQueryParametersResponseObject) {
+	s.Object = val
+}
+
+// SetTimestamp sets the value of Timestamp.
+func (s *OptionalQueryParametersResponse) SetTimestamp(val OptDateTime) {
+	s.Timestamp = val
+}
+
+// SetArray sets the value of Array.
+func (s *OptionalQueryParametersResponse) SetArray(val []string) {
+	s.Array = val
+}
+
+type OptionalQueryParametersResponseObject struct {
+	Key OptString `json:"key"`
+}
+
+// GetKey returns the value of Key.
+func (s *OptionalQueryParametersResponseObject) GetKey() OptString {
+	return s.Key
+}
+
+// SetKey sets the value of Key.
+func (s *OptionalQueryParametersResponseObject) SetKey(val OptString) {
 	s.Key = val
 }
 
