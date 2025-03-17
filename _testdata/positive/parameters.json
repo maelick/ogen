@@ -5,7 +5,7 @@
     "version": "0.1.0"
   },
   "paths": {
-    "/optionalQueryParameters": {
+    "/optionalParameters": {
       "get": {
         "operationId": "optionalParameters",
         "parameters": [
@@ -54,6 +54,17 @@
               "type": "string",
               "format": "date-time"
             }
+          },
+          {
+            "name": "array",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         ],
         "responses": {
@@ -62,7 +73,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/OptionalQueryParametersResponse"
                 }
               }
             }
@@ -443,6 +454,39 @@
   },
   "components": {
     "schemas": {
+      "OptionalQueryParametersResponse": {
+        "type": "object",
+        "required": [],
+        "properties": {
+          "integer": {
+            "type": "integer"
+          },
+          "string": {
+            "type": "string"
+          },
+          "boolean": {
+            "type": "boolean"
+          },
+          "object": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              }
+            }
+          },
+          "timestamp": {
+              "type": "string",
+              "format": "date-time"
+          },
+          "array": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "Value": {
         "type": "object",
         "required": [
