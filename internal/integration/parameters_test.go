@@ -19,6 +19,10 @@ type testParameters struct{}
 
 var _ api.Handler = (*testParameters)(nil)
 
+func (s *testParameters) OptionalParameters(ctx context.Context, params api.OptionalParametersParams) (string, error) {
+	return "", nil
+}
+
 func (s *testParameters) OptionalArrayParameter(ctx context.Context, params api.OptionalArrayParameterParams) (string, error) {
 	return "", nil
 }
