@@ -40,6 +40,10 @@ type Handler interface {
 	//
 	// GET /optionalArrayParameter
 	OptionalArrayParameter(ctx context.Context, params OptionalArrayParameterParams) (string, error)
+	// OptionalParameters implements optionalParameters operation.
+	//
+	// GET /optionalQueryParameters
+	OptionalParameters(ctx context.Context, params OptionalParametersParams) (string, error)
 	// PathParameter implements pathParameter operation.
 	//
 	// Test for path param.
