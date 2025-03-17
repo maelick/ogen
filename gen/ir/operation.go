@@ -123,13 +123,27 @@ func (op Parameter) GoDoc() []string {
 }
 
 // GoStructTag returns a Go struct tag for this parameter (if relevant).
-// Currently only returns omitzero for parameters with optional Type.GenericVariant
+// Currently only returns emoempty of arrays, maps and nullable Type.GenericVariant,
+// and omitzero for parameters with optional Type.GenericVariant
 func (op Parameter) GoStructTag() string {
 	if op.Type == nil {
 		return ""
 	}
-	if op.Type.GenericVariant.Optional {
-		return `json:",omitzero"`
+	switch op.Type.Kind {
+	case KindArray, KindMap:
+		return `json:",omitempty"`
+	default:
+		return op.goStructTag()
+	}
+
+}
+
+func (op Parameter) goStructTag() string {
+	variant := op.Type.GenericVariant
+	if variant.OnlyNullable() {
+		return `json:",omitempty"`
+	} else if variant.Optional {
+		return `json:",omitempty,omitzero"`
 	}
 	return ""
 }
