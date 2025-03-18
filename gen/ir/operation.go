@@ -135,7 +135,6 @@ func (op Parameter) GoStructTag() string {
 	default:
 		return op.goStructTag()
 	}
-
 }
 
 func (op Parameter) goStructTag() string {
